@@ -1,0 +1,5 @@
+Sorvete,15.00
+Pizza,55.00
+Refrigerante,12.00
+Hamburguer,27.00
+Chocolate,14.00

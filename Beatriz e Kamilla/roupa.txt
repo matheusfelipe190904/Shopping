@@ -1,0 +1,6 @@
+Blusa,60.00
+Calca,150.00
+Sapato,89.00
+Bone,24.60
+Vestido,127.00
+Agasalho,98.00
