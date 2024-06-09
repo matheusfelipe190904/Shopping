@@ -122,35 +122,62 @@ public class Main {
 
         Produto produtoSelecionado = (Produto) produtosComboBox.getSelectedItem();  // Obtém o produto selecionado no JComboBox de produtos
         int quantidade = Integer.parseInt(quantidadeField.getText()); // Converte o texto do campo de quantidade para um inteiro
-
-        for (int i = 0; i < quantidade; i++) {
-            carrinho.adicionarProduto(produtoSelecionado);
+        if(produtoSelecionado == null){
+            JOptionPane.showMessageDialog(null, "Não foi possível adicionar o produto ao carrinho, tente novamente.");
+            return;
         }
+        produtoSelecionado.setQuantidade(quantidade);
+        carrinho.adicionarProduto(produtoSelecionado);
         JOptionPane.showMessageDialog(null, "Produto adicionado ao carrinho.");
     }
 
     private static void mostrarResumoCompra(Carrinho carrinho) {
         double totalSemDesconto = carrinho.calcularTotal();
+        ArrayList<DiscountStrategy> discountList = new ArrayList<>();
 
         DiscountStrategy noDiscount = new NoDiscount();
+        discountList.add(noDiscount);
         DiscountStrategy quantityDiscount = new QuantityDiscount(5, 10);
+        discountList.add(quantityDiscount);
         DiscountStrategy totalPriceDiscount = new TotalPriceDiscount(1500, 20);
+        discountList.add(totalPriceDiscount);
         DiscountStrategy combinedDiscount = new CombinedDiscount(10, 2500, 30);
+        discountList.add(combinedDiscount);
 
-        double noDiscountPrice = noDiscount.applyDiscount(carrinho);
-        double quantityDiscountPrice = quantityDiscount.applyDiscount(carrinho);
-        double totalPriceDiscountPrice = totalPriceDiscount.applyDiscount(carrinho);
-        double combinedDiscountPrice = combinedDiscount.applyDiscount(carrinho);
+        double finalPrice=totalSemDesconto;
+        String discountMessage="Você não ganhou desconto";
 
-        double finalPrice = Math.min(Math.min(noDiscountPrice, quantityDiscountPrice),
-                Math.min(totalPriceDiscountPrice, combinedDiscountPrice));
+        for(DiscountStrategy discountStrategy : discountList) {
+            double price;
+            price = discountStrategy.applyDiscount(carrinho);
+            if (finalPrice > price) {
+                finalPrice=price;
+                if (discountStrategy instanceof NoDiscount) {
+                    discountMessage = "Você não ganhou desconto";
+                } else if (discountStrategy instanceof QuantityDiscount) {
+                    discountMessage = String.format("Você ganhou um desconto de %.2f porque comprou mais de %d unidades",
+                            ((QuantityDiscount) discountStrategy).getDiscountPercentage(), ((QuantityDiscount) discountStrategy).getMinQuantity());
+                }else if(discountStrategy instanceof TotalPriceDiscount){
+                    discountMessage = String.format("Você ganhou um desconto de %.2f porque gastou mais de %.2f reais em sua  compra",
+                            ((TotalPriceDiscount) discountStrategy).getDiscountPercentage(), ((TotalPriceDiscount) discountStrategy).getMinTotalPrice());
+                }else if(discountStrategy instanceof CombinedDiscount){
+                    discountMessage = String.format("Você ganhou um desconto de %.2f porque gastou mais de %.2f reais em sua compra e comprou mais de %d unidades",
+                            ((CombinedDiscount) discountStrategy).getDiscountPercentage(), ((CombinedDiscount) discountStrategy).getMinTotalPrice(), ((CombinedDiscount) discountStrategy).getMinQuantity());
+                }
+            }
+        }
 
         double desconto = totalSemDesconto - finalPrice;
 
         StringBuilder mensagem = new StringBuilder("Itens no carrinho:\n");
         for (Produto produto : carrinho.getProdutos()) {
             mensagem.append(produto).append("\n");
+            mensagem.append("Quantidade: ").append(produto.getQuantidade()).append("\n");
+            mensagem.append("Preço total: ").append(produto.calcularTotal()).append("\n");
+            mensagem.append("\n");
         }
+
+        mensagem.append(discountMessage).append("\n");
         mensagem.append("Total sem desconto: ").append(String.format("%.2f", totalSemDesconto)).append("\n");
         mensagem.append("Valor do desconto: ").append(String.format("%.2f", desconto)).append("\n");
         mensagem.append("Total com desconto: ").append(String.format("%.2f", finalPrice)).append("\n");

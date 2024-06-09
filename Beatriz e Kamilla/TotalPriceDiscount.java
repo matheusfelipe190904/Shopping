@@ -5,6 +5,11 @@ public class TotalPriceDiscount implements DiscountStrategy {
     private double minTotalPrice;
     private double discountPercentage;
 
+    public double getMinTotalPrice() {return minTotalPrice;}
+    public double getDiscountPercentage() {
+        return discountPercentage;
+    }
+
     //contrutor.
     public TotalPriceDiscount(double minTotalPrice, double discountPercentage) {
         this.minTotalPrice = minTotalPrice;

@@ -5,6 +5,9 @@ public class QuantityDiscount implements DiscountStrategy {
     private int minQuantity;
     private double discountPercentage;
 
+    public double getDiscountPercentage(){return discountPercentage;}
+    public int getMinQuantity(){return minQuantity;}
+
     //construtor que inicializa a quantidade minima e o desconto.
     public QuantityDiscount(int minQuantity, double discountPercentage) {
         this.minQuantity = minQuantity;
