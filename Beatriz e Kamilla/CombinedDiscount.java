@@ -12,6 +12,10 @@ public class CombinedDiscount implements DiscountStrategy {
         this.discountPercentage = discountPercentage;
     }
 
+    public double getDiscountPercentage(){return discountPercentage;}
+    public int getMinQuantity(){return minQuantity;}
+    public double getMinTotalPrice(){return minTotalPrice;}
+
     // Ele implementa a interface DiscountStrategy e aplica um desconto se tanto a quantidade de itens no carrinho quanto o total do carrinho excederem certos valores mínimos.
     @Override
     public double applyDiscount(Carrinho carrinho) {
