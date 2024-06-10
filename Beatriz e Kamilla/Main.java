@@ -155,13 +155,13 @@ public class Main {
                 if (discountStrategy instanceof NoDiscount) {
                     discountMessage = "Você não ganhou desconto";
                 } else if (discountStrategy instanceof QuantityDiscount) {
-                    discountMessage = String.format("Você ganhou um desconto de %.2f porque comprou mais de %d unidades",
+                    discountMessage = String.format("Você ganhou um desconto de %.2f%% porque comprou %d ou mais unidades",
                             ((QuantityDiscount) discountStrategy).getDiscountPercentage(), ((QuantityDiscount) discountStrategy).getMinQuantity());
                 }else if(discountStrategy instanceof TotalPriceDiscount){
-                    discountMessage = String.format("Você ganhou um desconto de %.2f porque gastou mais de %.2f reais em sua  compra",
+                    discountMessage = String.format("Você ganhou um desconto de %.2f%% porque gastou mais de %.2f reais em sua  compra",
                             ((TotalPriceDiscount) discountStrategy).getDiscountPercentage(), ((TotalPriceDiscount) discountStrategy).getMinTotalPrice());
                 }else if(discountStrategy instanceof CombinedDiscount){
-                    discountMessage = String.format("Você ganhou um desconto de %.2f porque gastou mais de %.2f reais em sua compra e comprou mais de %d unidades",
+                    discountMessage = String.format("Você ganhou um desconto de %.2f%% porque gastou mais de %.2f reais em sua compra e comprou %d ou mais unidades",
                             ((CombinedDiscount) discountStrategy).getDiscountPercentage(), ((CombinedDiscount) discountStrategy).getMinTotalPrice(), ((CombinedDiscount) discountStrategy).getMinQuantity());
                 }
             }
